@@ -1,0 +1,52 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: markscanner-backend
+    volumes:
+      - ./backend:/app/backend
+      - ./dolphin_tools:/app/dolphin_tools
+      - dolphin_models:/app/hf_model
+    ports:
+      - "8000:8000"
+    environment:
+      - SECRET_KEY=changeme
+    stdin_open: true
+    tty: true
+    develop:
+      watch:
+        - action: sync
+          path: ./backend
+          target: /app/backend
+          ignore:
+            - __pycache__/
+        - action: rebuild
+          path: requirements.txt
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: markscanner-frontend
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+    depends_on:
+      - backend
+    develop:
+      watch:
+        - action: sync
+          path: ./frontend/src
+          target: /app/src
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: ./frontend/package.json
+
+volumes:
+  dolphin_models:
