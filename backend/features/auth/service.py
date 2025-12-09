@@ -4,8 +4,13 @@ from backend.features.auth.models import User, UserCreate
 from backend.core.security import get_password_hash, verify_password
 
 def create_user(session: Session, user_create: UserCreate) -> User:
-    db_user = User.from_orm(user_create)
-    db_user.hashed_password = get_password_hash(user_create.password)
+    # Build User explicitly to avoid validation error on missing hashed_password
+    db_user = User(
+        email=user_create.email,
+        full_name=user_create.full_name,
+        role=user_create.role,
+        hashed_password=get_password_hash(user_create.password),
+    )
     session.add(db_user)
     session.commit()
     session.refresh(db_user)

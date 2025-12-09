@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+// Use relative path to leverage Next.js rewrites/proxy
+const API_BASE_URL = '/api/v1';
 
 // Create axios instance
 const api = axios.create({
@@ -58,8 +59,11 @@ export interface Copy {
   id: string;
   exam_id: string;
   file_path: string;
+  file_url?: string;
+  student_name?: string;
   grade: number | null;
   annotations: object | null;
+  status?: 'pending' | 'corrected' | 'reviewed';
 }
 
 export interface CorrectionResult {
@@ -70,19 +74,14 @@ export interface CorrectionResult {
 
 // Auth API
 export const authAPI = {
-  register: async (email: string, password: string, role: 'student' | 'professor' | 'admin') => {
-    const response = await api.post<User>('/auth/register', { email, password, role });
-    return response.data;
-  },
-
   login: async (username: string, password: string) => {
-    const formData = new FormData();
-    formData.append('username', username);
-    formData.append('password', password);
+    const params = new URLSearchParams();
+    params.append('username', username);
+    params.append('password', password);
 
-    const response = await axios.post<LoginResponse>(`${API_BASE_URL}/auth/login`, formData, {
+    const response = await api.post<LoginResponse>('/auth/login', params, {
       headers: {
-        'Content-Type': 'multipart/form-data',
+        'Content-Type': 'application/x-www-form-urlencoded',
       },
     });
 
@@ -145,7 +144,13 @@ export const copiesAPI = {
     return response.data;
   },
 
-  getCopy: async (examId: string, copyId: string) => {
+  getCopy: async (copyId: string) => {
+    // Updated to accept just copyId for direct access
+    const response = await api.get<Copy>(`/copies/${copyId}`);
+    return response.data;
+  },
+
+  getCopyByExam: async (examId: string, copyId: string) => {
     const response = await api.get<Copy>(`/exams/${examId}/copies/${copyId}`);
     return response.data;
   },
@@ -177,15 +182,15 @@ export const resultsAPI = {
     });
     return response.data;
   },
-
-  getAnnotations: async (examId: string, copyId: string) => {
-    const response = await api.get<{ copyId: string; annotations: object }>(`/exams/${examId}/copies/${copyId}/annotations`);
-    return response.data;
-  },
 };
 
 // Chatbot/Rectification API
 export const chatbotAPI = {
+  sendMessage: async (data: { message: string; copy_id: string; context?: string }) => {
+    const response = await api.post<{ response: string; message_id?: string }>('/chatbot/message', data);
+    return response.data;
+  },
+
   requestRectification: async (examId: string, copyId: string, message: string) => {
     const response = await api.post<{ copyId: string; status: string; response: string }>(`/exams/${examId}/copies/${copyId}/rectify`, { message });
     return response.data;

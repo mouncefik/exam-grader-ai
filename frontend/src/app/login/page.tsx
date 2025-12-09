@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -44,10 +43,14 @@ export default function LoginPage() {
     setError('');
 
     try {
+      console.log('Attempting login with:', data.username);
       const response = await authAPI.login(data.username, data.password);
+      console.log('Login successful, token received:', response.access_token.substring(0, 20) + '...');
       
       // Get user info
+      console.log('Fetching user info...');
       const user = await authAPI.getCurrentUser();
+      console.log('User info received:', user);
       
       // Update auth state
       login(response.access_token, user);
@@ -55,7 +58,9 @@ export default function LoginPage() {
       toast.success('Login successful!');
       router.push('/dashboard');
     } catch (err: any) {
-      const errorMessage = err.response?.data?.detail || 'Login failed. Please check your credentials.';
+      console.error('Login error:', err);
+      console.error('Error response:', err.response);
+      const errorMessage = err.response?.data?.detail || err.message || 'Login failed. Please check your credentials.';
       setError(errorMessage);
       toast.error(errorMessage);
     } finally {
@@ -149,13 +154,7 @@ export default function LoginPage() {
               </Button>
               
               <p className="text-sm text-center text-gray-600">
-                Don't have an account?{' '}
-                <Link 
-                  href="/register" 
-                  className="text-blue-600 hover:text-blue-800 font-medium"
-                >
-                  Sign up
-                </Link>
+                Need an account? Contact an administrator to be added.
               </p>
             </CardFooter>
           </form>

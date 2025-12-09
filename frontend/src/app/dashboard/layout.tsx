@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { usePathname } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 import { 
   LayoutDashboard, 
   BookOpen, 
@@ -33,7 +33,38 @@ interface DashboardLayoutProps {
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isChecking, setIsChecking] = useState(true);
   const pathname = usePathname();
+  const router = useRouter();
+  const { isAuthenticated, user, token } = useAuthStore();
+
+  useEffect(() => {
+    // Check if user is authenticated and has valid token
+    const checkAuth = () => {
+      const storedToken = localStorage.getItem('access_token');
+      
+      if (!isAuthenticated || !token || !storedToken) {
+        router.replace('/login');
+        return;
+      }
+      
+      setIsChecking(false);
+    };
+
+    checkAuth();
+  }, [isAuthenticated, token, router]);
+
+  // Show loading or nothing while checking authentication
+  if (isChecking || !isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   const Sidebar = () => (
     <div className="flex flex-col h-full bg-gradient-to-b from-gray-900 to-gray-800">
@@ -43,7 +74,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           <span className="text-xl font-bold text-white">MarkScanner</span>
         </div>
       </div>
-      
+
       <nav className="flex-1 px-4 py-6 space-y-2">
         {navigation.map((item) => {
           const isActive = pathname === item.href;
@@ -64,15 +95,31 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             );
         })}
       </nav>
+
+      {/* Profil et Déconnexion */}
+      <div className="mt-auto px-4 py-6 border-t border-gray-700">
+        <div className="mb-4">
+          <div className="text-xs text-gray-400">Connecté en tant que :</div>
+          <div className="text-sm text-white font-medium">{user?.email || 'Utilisateur'}</div>
+          <div className="text-xs text-blue-300">{user?.role || ''}</div>
+        </div>
+        <button
+          className="w-full py-2 px-4 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-semibold transition-colors"
+          onClick={() => {
+            localStorage.removeItem('access_token');
+            window.location.href = '/login';
+          }}
+        >
+          Déconnexion
+        </button>
+      </div>
     </div>
   );
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <Navbar isAuthenticated={true} />
-      
       {/* Dashboard Navigation Sidebar */}
-      <div className="flex pt-16">
+      <div className="flex">
         {/* Desktop Sidebar */}
         <div className="hidden md:flex md:w-64 md:flex-col">
           <Sidebar />
@@ -84,7 +131,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             <Button
               variant="ghost"
               size="icon"
-              className="md:hidden fixed top-20 left-4 z-40"
+              className="md:hidden fixed top-4 left-4 z-40"
             >
               <Menu className="h-6 w-6" />
             </Button>
@@ -107,7 +154,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
           {/* Main Content Area */}
           <main className="flex-1 overflow-auto">
-            <div className="p-4 md:p-6 lg:p-8">
+            <div className="p-6">
               {children}
             </div>
           </main>

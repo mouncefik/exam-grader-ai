@@ -10,7 +10,6 @@ import {
   X, 
   GraduationCap,
   LogIn,
-  UserPlus,
   ChevronDown
 } from 'lucide-react';
 import {
@@ -38,10 +37,8 @@ export default function Navbar({ isAuthenticated = false }: NavbarProps) {
   };
 
   const navigation = [
-    { name: 'Features', href: '/#features' },
-    { name: 'How it Works', href: '/#how-it-works' },
-    { name: 'Pricing', href: '/#pricing' },
-    { name: 'About', href: '/#about' },
+    { name: 'Features', href: '/landing#features' },
+    { name: 'How it Works', href: '/landing#how-it-works' },
   ];
 
   return (
@@ -108,12 +105,6 @@ export default function Navbar({ isAuthenticated = false }: NavbarProps) {
                     Sign In
                   </Button>
                 </Link>
-                <Link href="/register">
-                  <Button size="sm">
-                    <UserPlus className="mr-2 h-4 w-4" />
-                    Get Started
-                  </Button>
-                </Link>
               </>
             ) : (
               <Link href="/dashboard">
@@ -154,12 +145,6 @@ export default function Navbar({ isAuthenticated = false }: NavbarProps) {
                           <Button variant="outline" className="w-full">
                             <LogIn className="mr-2 h-4 w-4" />
                             Sign In
-                          </Button>
-                        </Link>
-                        <Link href="/register" onClick={() => setIsMobileMenuOpen(false)}>
-                          <Button className="w-full">
-                            <UserPlus className="mr-2 h-4 w-4" />
-                            Get Started
                           </Button>
                         </Link>
                       </div>

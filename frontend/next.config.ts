@@ -12,6 +12,14 @@ const nextConfig: NextConfig = {
     // 构建时忽略ESLint错误
     ignoreDuringBuilds: true,
   },
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'http://backend:8000/api/:path*',
+      },
+    ];
+  },
 };
 
 export default nextConfig;

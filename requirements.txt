@@ -1,10 +1,12 @@
 
 fastapi
+pydantic-settings
 uvicorn[standard]
 sqlmodel
 python-multipart
 python-jose[cryptography]
-passlib[bcrypt]
+passlib[argon2]
+argon2_cffi
 # Dolphin Tools Dependencies
 numpy==1.24.4
 omegaconf==2.3.0

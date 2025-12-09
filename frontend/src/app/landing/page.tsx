@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { useState } from "react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { 
   GraduationCap,
   Zap,
@@ -22,8 +22,8 @@ import {
   Camera,
   Target,
   MessageSquare
-} from 'lucide-react';
-import Navbar from '@/components/navbar';
+} from "lucide-react";
+import Navbar from "@/components/navbar";
 
 export default function LandingPage() {
   const [activeTab, setActiveTab] = useState('professors');
@@ -79,59 +79,6 @@ export default function LandingPage() {
     'Mobile-friendly interface',
   ];
 
-  const pricingPlans = [
-    {
-      name: 'Starter',
-      price: 'Free',
-      description: 'Perfect for individual educators',
-      features: [
-        'Up to 50 exams per month',
-        'Basic AI grading',
-        'Email support',
-        'Mobile app access',
-      ],
-      notIncluded: [
-        'Advanced analytics',
-        'Priority support',
-        'Custom integrations',
-      ],
-      highlighted: false,
-    },
-    {
-      name: 'Professional',
-      price: '$29',
-      priceUnit: '/month',
-      description: 'Ideal for educational institutions',
-      features: [
-        'Unlimited exams',
-        'Advanced AI grading',
-        'Detailed analytics dashboard',
-        'Priority email support',
-        'Mobile app access',
-        'Custom rubrics',
-      ],
-      notIncluded: [
-        'Custom integrations',
-      ],
-      highlighted: true,
-    },
-    {
-      name: 'Enterprise',
-      price: 'Custom',
-      description: 'For large institutions',
-      features: [
-        'Everything in Professional',
-        'Custom integrations',
-        'Dedicated account manager',
-        '24/7 phone support',
-        'On-site training',
-        'SLA guarantee',
-      ],
-      notIncluded: [],
-      highlighted: false,
-    },
-  ];
-
   const testimonials = [
     {
       name: 'Dr. Sarah Johnson',
@@ -177,10 +124,10 @@ export default function LandingPage() {
               and provide detailed feedback to students in minutes, not hours.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/register">
+              <Link href="/login">
                 <Button size="lg" className="text-lg px-8 py-3">
                   <GraduationCap className="mr-2 h-5 w-5" />
-                  Start Free Trial
+                  Request Access
                 </Button>
               </Link>
               <Link href="/#features">
@@ -340,69 +287,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Pricing Section */}
-      <section id="pricing" className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Simple, Transparent Pricing
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Choose the plan that fits your needs. Start with our free plan today.
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {pricingPlans.map((plan, index) => (
-              <Card 
-                key={index} 
-                className={`relative hover:shadow-lg transition-shadow ${
-                  plan.highlighted ? 'border-blue-600 border-2' : ''
-                }`}
-              >
-                {plan.highlighted && (
-                  <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-blue-600">
-                    Most Popular
-                  </Badge>
-                )}
-                <CardHeader className="text-center">
-                  <CardTitle className="text-2xl">{plan.name}</CardTitle>
-                  <CardDescription>{plan.description}</CardDescription>
-                  <div className="mt-4">
-                    <span className="text-4xl font-bold">{plan.price}</span>
-                    {plan.priceUnit && <span className="text-gray-600">{plan.priceUnit}</span>}
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-3">
-                    {plan.features.map((feature, featureIndex) => (
-                      <li key={featureIndex} className="flex items-start space-x-2">
-                        <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
-                        <span className="text-gray-700">{feature}</span>
-                      </li>
-                    ))}
-                    {plan.notIncluded.map((feature, featureIndex) => (
-                      <li key={featureIndex} className="flex items-start space-x-2 opacity-50">
-                        <div className="h-5 w-5 border-2 border-gray-300 rounded-full flex-shrink-0 mt-0.5" />
-                        <span className="text-gray-500">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <Button 
-                    className={`w-full mt-6 ${
-                      plan.highlighted ? 'bg-blue-600 hover:bg-blue-700' : ''
-                    }`}
-                    variant={plan.highlighted ? 'default' : 'outline'}
-                  >
-                    {plan.name === 'Enterprise' ? 'Contact Sales' : 'Get Started'}
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Testimonials Section */}
       <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -437,31 +321,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20 bg-blue-600">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Ready to Transform Your Grading Process?
-          </h2>
-          <p className="text-xl text-blue-100 mb-8">
-            Join thousands of educators who are already saving time and improving student outcomes.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/register">
-              <Button size="lg" variant="secondary" className="text-lg px-8 py-3">
-                <GraduationCap className="mr-2 h-5 w-5" />
-                Start Free Trial
-              </Button>
-            </Link>
-            <Link href="/#features">
-              <Button size="lg" variant="outline" className="text-lg px-8 py-3 text-white border-white hover:bg-white hover:text-blue-600">
-                Schedule Demo
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
-
       {/* Footer */}
       <footer className="bg-gray-900 text-gray-300 py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -479,10 +338,9 @@ export default function LandingPage() {
             <div>
               <h3 className="text-white font-semibold mb-4">Product</h3>
               <ul className="space-y-2 text-sm">
-                <li><Link href="/#features" className="hover:text-white">Features</Link></li>
-                <li><Link href="/#pricing" className="hover:text-white">Pricing</Link></li>
-                <li><Link href="/#how-it-works" className="hover:text-white">How it Works</Link></li>
-                <li><Link href="#" className="hover:text-white">API</Link></li>
+                <li><Link href="/landing#features" className="hover:text-white">Features</Link></li>
+                <li><Link href="/landing#how-it-works" className="hover:text-white">How it Works</Link></li>
+                <li><Link href="/login" className="hover:text-white">Request Access</Link></li>
               </ul>
             </div>
             
